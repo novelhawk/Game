@@ -10,6 +10,6 @@ uniform mat4 projection;
 out vec2 vTexCoord;
 
 void main() {
-    gl_Position = /*projection * view * model * */vec4(aPosition, 1.0) * model * view * projection; 
+    gl_Position = projection * view * model * vec4(aPosition, 1.0); 
     vTexCoord = aTexCoord;
 }

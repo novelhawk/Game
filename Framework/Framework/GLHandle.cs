@@ -1,20 +1,17 @@
 using System;
 using System.Runtime.CompilerServices;
-using Framework.Exceptions;
 
 namespace Framework
 {
     public struct GLHandle : IEquatable<GLHandle>
     {
+        public static GLHandle MinusOne = new GLHandle(-1);
+        public static GLHandle Zero = new GLHandle(0);
+        
         private readonly int _id;
 
         public GLHandle(int id)
         {
-#if DEBUG
-            if (id == 0)
-                throw new GLException("Handle was not created");
-#endif
-            
             _id = id;
         }
 
@@ -51,7 +48,7 @@ namespace Framework
 
         public override int GetHashCode()
         {
-            return _id;
+            return _id.GetHashCode();
         }
     }
 }

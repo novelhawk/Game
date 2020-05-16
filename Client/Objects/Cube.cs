@@ -1,15 +1,14 @@
 using Framework;
 using Framework.Shaders;
-using OpenTK;
-using OpenTK.Audio.OpenAL;
-using OpenTK.Graphics.OpenGL4;
+using OpenToolkit.Graphics.OpenGL4;
+using OpenToolkit.Mathematics;
 
 namespace Client.Objects
 {
-    public class Cube : DrawableObject
+    public class Cube : DrawableObject, IWorldObject
     {
-        public Vector3 Position { get; }
-        public Matrix4 Model { get; }
+        public Vector3 Position { get; private set; }
+        public Matrix4 Model { get; private set; }
 
         private readonly float[] _vertices =
         {
@@ -25,23 +24,41 @@ namespace Client.Objects
 
         private readonly uint[] _indices =
         {
-            0, 1, 2, 3, // Front
-            4, 5, 6, 7, // Back
-            1, 2, 6, 5, // Right
-            0, 3, 7, 4, // Left
-            0, 1, 5, 4, // Top
-            2, 3, 7, 6, // Bottom
+            // Front
+            0, 1, 2,
+            0, 2, 3,
+            
+            // Back
+            4, 5, 6, 
+            4, 6, 7,
+            
+            // Right
+            1, 2, 6, 
+            1, 5, 6,
+            
+            // Left
+            0, 3, 7, 
+            0, 7, 4,
+            
+            // Top
+            0, 1, 5, 
+            0, 5, 4,
+            
+            // Bottom
+            2, 3, 7, 
+            2, 7, 6
         };
 
-        public Cube(Shader shader) : base(shader)
+        public Cube(Program program) : base(program)
         {
-            Shader.Use();
-            GL.BindVertexArray(GLObjects.VertexArray);
+            Program.Use();
             
-            GL.BindBuffer(BufferTarget.ArrayBuffer, GLObjects.VertexBuffer);
+            GL.BindVertexArray(Buffers.VertexArray);
+            
+            GL.BindBuffer(BufferTarget.ArrayBuffer, Buffers.VertexBuffer);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
             
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, GLObjects.ElementBuffer);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, Buffers.ElementBuffer);
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
             
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
@@ -50,18 +67,27 @@ namespace Client.Objects
 
         public void Update()
         {
-            Shader.Use();
+            Program.Use();
+
+            Position += Vector3.UnitX / 200;
+            Model = Matrix4.CreateTranslation(Position);
             
-            Shader.SetMatrix4("model", Matrix4.Identity);
-            Shader.SetMatrix4("view", Matrix4.Identity);
-            Shader.SetMatrix4("projection", Matrix4.Identity);
+            Program.SetUniformValue("view", Window.Camera.GetViewMatrix());
+            Program.SetUniformValue("model", Model);
+            Program.SetUniformValue("projection", Window.Camera.GetProjectionMatrix());
         }
 
         public void Draw()
         {
-            Shader.Use();
-            GL.BindVertexArray(GLObjects.VertexArray);
+            Program.Use();
+            GL.BindVertexArray(Buffers.VertexArray);
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+        }
+
+        public bool IsDestroyed { get; }
+        public void Destroy()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using OpenTK.Graphics.OpenGL4;
+using OpenToolkit.Graphics.OpenGL4;
 
 namespace Client
 {
@@ -11,8 +11,8 @@ namespace Client
         
         private static void Main()
         {
-            using (var window = new Window())
-                window.Run();
+            using var window = new Window();
+            window.Run();
         }
         
         [Conditional("DEBUG")]

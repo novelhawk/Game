@@ -1,5 +1,5 @@
 using System;
-using OpenTK;
+using OpenToolkit.Mathematics;
 
 namespace Framework
 {
@@ -12,7 +12,7 @@ namespace Framework
         private Vector3 _position;
         private float _pitch;
         private float _yaw = -MathHelper.PiOver2;
-        private float _fov = MathHelper.Pi - 0.01f;
+        private float _fov = MathHelper.PiOver2;
 
         private readonly float _aspectRatio;
         
@@ -23,6 +23,10 @@ namespace Framework
         {
             _aspectRatio = aspectRatio;
         }
+
+        public Vector3 Up => _up;
+        public Vector3 Front => _front;
+        public Vector3 Right => _right;
         
         public Vector3 Position
         {

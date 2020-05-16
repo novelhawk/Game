@@ -1,0 +1,3 @@
+[submodule "Framework"]
+	path = Framework
+	url = http://github.com/ITALIA195/Framework.git
