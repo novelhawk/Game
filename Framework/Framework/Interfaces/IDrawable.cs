@@ -1,11 +1,9 @@
-using OpenToolkit.Mathematics;
+using OpenToolkit.Windowing.Common;
 
-namespace Framework
+namespace Framework.Interfaces
 {
     public interface IDrawable
     {
-        Matrix4 Model { get; }
-        
-        void Draw();
+        void Draw(FrameEventArgs e);
     }
 }

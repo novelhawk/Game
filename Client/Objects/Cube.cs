@@ -1,15 +1,14 @@
 using Framework;
+using Framework.Interfaces;
 using Framework.Shaders;
 using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Mathematics;
+using OpenToolkit.Windowing.Common;
 
 namespace Client.Objects
 {
-    public class Cube : DrawableObject, IWorldObject
+    public class Cube : DrawableObject, IWorldObject, IDrawable, IUpdatable
     {
-        public Vector3 Position { get; private set; }
-        public Matrix4 Model { get; private set; }
-
         private readonly float[] _vertices =
         {
             -1, +1, -1, // [Front] Top Left
@@ -64,8 +63,19 @@ namespace Client.Objects
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
         }
+        
+        public Vector3 Position { get; private set; }
+        
+        public override Matrix4 Model { get; set; }
 
-        public void Update()
+        public override void Draw(FrameEventArgs e)
+        {
+            Program.Use();
+            GL.BindVertexArray(Buffers.VertexArray);
+            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+        }
+
+        public override void Update(FrameEventArgs e)
         {
             Program.Use();
 
@@ -75,13 +85,6 @@ namespace Client.Objects
             Program.SetUniformValue("view", Window.Camera.GetViewMatrix());
             Program.SetUniformValue("model", Model);
             Program.SetUniformValue("projection", Window.Camera.GetProjectionMatrix());
-        }
-
-        public void Draw()
-        {
-            Program.Use();
-            GL.BindVertexArray(Buffers.VertexArray);
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
         }
 
         public bool IsDestroyed { get; }

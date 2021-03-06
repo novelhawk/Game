@@ -1,9 +1,10 @@
 using System;
+using Framework.Interfaces;
 using OpenToolkit.Mathematics;
 
 namespace Framework
 {
-    public class Camera : IWorldObject, IUpdatable
+    public class Camera : IWorldObject
     {
         private Vector3 _front = -Vector3.UnitZ;
         private Vector3 _up = Vector3.UnitY;

@@ -1,4 +1,4 @@
-namespace Framework
+namespace Framework.Interfaces
 {
     public interface IDestroyable
     {

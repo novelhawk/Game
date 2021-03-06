@@ -1,6 +1,6 @@
 using OpenToolkit.Mathematics;
 
-namespace Framework
+namespace Framework.Interfaces
 {
     public interface IWorldObject : IDestroyable
     {

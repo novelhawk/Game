@@ -18,8 +18,6 @@ namespace Client
         public Window() : base(GameWindowSettings.Default, NativeWindowSettings)
         {
             Load += OnLoad;
-            RenderFrame += OnRender;
-            UpdateFrame += OnUpdate;
         }
 
         private static NativeWindowSettings NativeWindowSettings =>
@@ -55,21 +53,18 @@ namespace Client
             Camera.Pitch = -90;
             
             _terrain = new Terrain(textured);
+            RenderFrame += _terrain.Draw;
+            UpdateFrame += _terrain.Update;
             
             _movement = new PlayerMovement(Camera);
             KeyDown += _movement.OnKeyDown;
             MouseMove += _movement.OnMouseMove;
             
-            
             _cube = new Cube(untextured);
+            RenderFrame += _cube.Draw;
+            UpdateFrame += _cube.Update;
             
             Camera.TrackObject(_cube);
-        }
-
-        private void OnRender(FrameEventArgs e)
-        {
-            _terrain.Draw();
-            _cube.Draw();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -80,13 +75,6 @@ namespace Client
             
             GL.Flush();
             SwapBuffers();
-        }
-
-        private void OnUpdate(FrameEventArgs e)
-        {
-            Camera.Update((float) e.Time);
-            _terrain.Update();
-            _cube.Update();
         }
     }
 }
